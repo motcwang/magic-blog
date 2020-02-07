@@ -1,11 +1,11 @@
-const router = require('koa-router')()
-const article = require('./article')
+const router = require('koa-router')();
+const article = require('./article');
 
-router.get('/', async (ctx, next) => {
-  await ctx.render('index', {
-    title: 'Hello Koa 2!'
-  })
-})
+router.get('/', async (ctx) => {
+    await ctx.render('index', {
+        title: 'Hello Koa 2!',
+    });
+});
 
 // router.get('/string', async (ctx, next) => {
 //   ctx.body = 'koa2 string'
@@ -17,6 +17,6 @@ router.get('/', async (ctx, next) => {
 //   }
 // })
 
-router.use('/article', article.routes(), article.allowedMethods())
+router.use('/article', article.routes(), article.allowedMethods());
 
-module.exports = router
+module.exports = router;

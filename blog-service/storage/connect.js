@@ -1,8 +1,11 @@
-const { uri, options } = require('../constants/mongo')
-const mongoose = require('mongoose')
+const {
+    uri,
+    options,
+} = require('../constants/mongo');
+const mongoose = require('mongoose');
 
 module.exports = {
-      connectDb() {
-            return mongoose.connect(uri, options)
-      }
-}
+    connectDb() {
+        return mongoose.connect(uri, options);
+    },
+};
