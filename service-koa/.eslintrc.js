@@ -1,7 +1,7 @@
 module.exports = {
   extends: [
     'alloy',
-    'alloy/typescript',
+    'alloy/typescript'
   ],
   rules: {
     'accessor-pairs': 2,
