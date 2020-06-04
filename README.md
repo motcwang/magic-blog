@@ -1,2 +1,2 @@
-# magic-blog
+# magician 
 blog system
