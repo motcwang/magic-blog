@@ -5,7 +5,9 @@
 		"target": "es2017",
 		"module": "commonjs",
 		"moduleResolution": "node",
-		"esModuleInterop": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
 		"declaration": true,
 		"declarationMap": true,
 		"outDir": "dist",
@@ -17,7 +19,7 @@
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
 		"resolveJsonModule": false,
-		"suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true
 	},
 	"include": [ "src/*" ]
 }
