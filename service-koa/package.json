@@ -24,7 +24,8 @@
     "koa-bodyparser": "^4.3.0",
     "koa-json": "^2.0.2",
     "koa-router": "^9.0.1",
-    "log4js": "^6.3.0"
+    "log4js": "^6.3.0",
+    "tsyringe": "^4.3.0"
   },
   "devDependencies": {
     "@types/koa": "^2.11.3",
@@ -37,6 +38,7 @@
     "eslint-config-alloy": "^3.7.2",
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
+    "reflect-metadata": "^0.1.13",
     "tsc-watch": "^4.2.8",
     "typescript": "^3.9.3"
   }

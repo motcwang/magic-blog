@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import Koa from 'koa';
 import json from 'koa-json';
 import bodyparser from 'koa-bodyparser';
@@ -11,7 +12,6 @@ class Application {
   private app: Koa;
   public constructor() {
     this.app = new Koa();
-
     // middlewares
     this.app.use(
       bodyparser({
