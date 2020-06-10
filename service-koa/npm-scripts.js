@@ -13,7 +13,7 @@ switch (task) {
   case 'typescript:build': {
     execute('rm -rf dist');
     execute('tsc');
-    taskReplaceVersion();
+    buildSuccessCallback();
 
     break;
   }
@@ -25,7 +25,7 @@ switch (task) {
 
     const watch = new TscWatchClient();
 
-    watch.on('success', taskReplaceVersion);
+    watch.on('success', buildSuccessCallback);
     watch.start('--pretty');
 
     break;
@@ -36,16 +36,7 @@ switch (task) {
   }
 }
 
-function taskReplaceVersion() {
-  replaceJsVersion();
-}
-
-function replaceJsVersion() {
-  const file = 'dist/index.js';
-  const text = fs.readFileSync(file, { encoding: 'utf8' });
-  const result = text.replace(/__VERSION__/g, version);
-
-  fs.writeFileSync(file, result, { encoding: 'utf8' });
+function buildSuccessCallback() {
 }
 
 function execute(command) {

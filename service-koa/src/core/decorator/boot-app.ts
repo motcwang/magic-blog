@@ -6,7 +6,7 @@ import constructor from '../types/constructor';
  * App start decorator.
  */
 export function bootApp() {
-  return (target: constructor<any>) => {
+  return (_target: constructor<any>) => {
     // const params: any[] = Reflect.getMetadata('design:paramtypes', target) || [];
     // params.forEach(item => {
     //   console.log(item);

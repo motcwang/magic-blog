@@ -2,7 +2,7 @@
   "name": "service-koa",
   "version": "0.1.0",
   "description": "Service",
-  "main": "index.js",
+  "main": "dist/app.js",
   "scripts": {
     "typescript:build": "node npm-scripts.js typescript:build",
     "typescript:watch": "node npm-scripts.js typescript:watch",

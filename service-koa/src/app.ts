@@ -3,8 +3,8 @@ import 'reflect-metadata';
 import Koa from 'koa';
 import json from 'koa-json';
 import bodyparser from 'koa-bodyparser';
-import { Logger} from './common/logger';
-import { RouterMiddleware } from './routes';
+import { Logger } from './common/logger';
+import { RouterMiddleware } from './core/middleware/router';
 import { HttpServer } from './core/server/http/index';
 import { autoInjectable } from 'tsyringe';
 
@@ -34,6 +34,7 @@ class Application {
 
     // routes
     this.app.use(this.router.routes());
+    this.app.use(this.router.allowedMethods());
 
     // error-handling
     this.app.on('error', (err, ctx) => {

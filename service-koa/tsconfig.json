@@ -19,7 +19,12 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": false,
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@": ["."],
+      "@core": ["./core"]
+    },
   },
   "include": ["src/*"]
 }

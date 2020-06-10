@@ -1,25 +1,36 @@
 // eslint-disable-next-line no-unused-vars
-import { IRouterParams } from '../router';
+import { RouterParams, RouterPath } from '../types';
+import { RouterService } from '../service/router';
+import * as container from '../container';
 
-export const Router = (params: IRouterParams) => {
-  return (target: any, name: string, descriptor: ParameterDecorator) => {
-
+/**
+ * Method decorator
+ * @param params
+ */
+export const routerMapping = (params: RouterParams): Function => {
+  return (target: any, name: string, _descriptor: ParameterDecorator) => {
+    const config = {
+      target,
+      methodName: name,
+      params
+    };
+    const routerService = container.load(RouterService);
+    routerService.saveDecoratorRouterInfo(config, target[name]);
   };
 };
 
-export const GET = (path: string) => {
-  return Router({method: 'get', path});
+export const getMapping = (path: RouterPath): Function => {
+  return routerMapping({ method: 'get', path });
 };
 
-export const POST = (path: string) => {
-  return Router({method: 'post', path});
+export const postMapping = (path: RouterPath): Function => {
+  return routerMapping({ method: 'post', path });
 };
 
-export const PUT = (path: string) => {
-  return Router({method: 'put', path});
+export const putMapping = (path: RouterPath): Function => {
+  return routerMapping({ method: 'put', path });
 };
 
-export const DELETE = (path: string) => {
-  return Router({method: 'delete', path});
+export const deleteMapping = (path: RouterPath): Function => {
+  return routerMapping({ method: 'delete', path });
 };
-
