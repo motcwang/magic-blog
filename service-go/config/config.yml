@@ -1,0 +1,10 @@
+# server
+server:
+  port: 6954
+
+# logger configuration
+log:
+    prefix: '[MAGICIAN]'
+    log-file: true
+    stdout: 'DEBUG'
+    file: 'DEBUG'
