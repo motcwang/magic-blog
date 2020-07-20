@@ -4,9 +4,9 @@ server:
 
 # logger configuration
 log:
-    prefix: '[MAGICIAN]'
-    log-file: true
-    stdout: 'DEBUG'
-    file: 'DEBUG'
-    log-soft-link: 'latest_log'
-    log-dir: '.log'
+  prefix: '[MAGICIAN]'
+  logFile: true
+  stdout: 'DEBUG'
+  file: 'DEBUG'
+  logSoftLink: './.log/latest_log'
+  logDir: './.log'

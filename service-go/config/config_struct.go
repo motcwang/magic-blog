@@ -14,9 +14,9 @@ type Server struct {
 // Log struct
 type Log struct {
 	Prefix      string `yaml:"prefix"`
-	LogFile     bool   `yaml:"log-file"`
+	LogFile     bool   `yaml:"logFile"`
 	Stdout      string `yaml:"stdout"`
 	File        string `yaml:"file"`
-	LogDir      string `yaml:"log-dir"`
-	LogSoftLink string `yaml:"log-soft-link"`
+	LogDir      string `yaml:"logDir"`
+	LogSoftLink string `yaml:"logSoftLink"`
 }

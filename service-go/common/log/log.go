@@ -19,7 +19,7 @@ import (
 var Logger *oplogging.Logger
 
 const (
-	defaultFormatter = `%{time:2006/01/02 - 15:04:05.000} %{longfile} %{color:bold}▶ [%{level:.6s}] %{message}%{color:reset}`
+	defaultFormatter = ` %{time:2006/01/02 - 15:04:05.000} %{shortfile} %{color:bold}▶ [%{level:.6s}] %{message}%{color:reset}`
 	module           = constants.ServerName
 )
 
@@ -28,6 +28,8 @@ func init() {
 	if logConfig.Prefix == "" {
 		logConfig.Prefix = "[-]"
 	}
+	fmt.Println(logConfig)
+
 	Logger = oplogging.MustGetLogger(module)
 	var backends []oplogging.Backend
 	registerStdout(logConfig, &backends)
@@ -53,7 +55,10 @@ func registerFile(c config.Log, backends *[]oplogging.Backend) io.Writer {
 		if ok, _ := utils.PathExists(c.LogDir); !ok {
 			// directory not exist
 			fmt.Println("create log directory")
-			_ = os.Mkdir(c.LogDir, os.ModePerm)
+			err := os.Mkdir(c.LogDir, os.ModePerm)
+			if err != nil {
+				fmt.Println("mkdir error - ", err)
+			}
 		}
 		fileWriter, err := rotatelogs.New(
 			c.LogDir+string(os.PathSeparator)+"%Y-%m-%d-%H-%M.log",
