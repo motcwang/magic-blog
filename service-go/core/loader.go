@@ -19,12 +19,17 @@ func GetCoreLoader() *CoreLoader {
 }
 
 type CoreLoader struct {
-	Loader *[]Loader
+	Loaders []*Loader
 }
 
 func (c *CoreLoader) Init() (interface{}, error) {
-	return nil, nil
+	for _, loader := range c.Loaders {
+		var a Loader = *loader
+		a.Init()
+	}
+	return c, nil
 }
 
-func (c *CoreLoader) Register(loader Loader) {
+func (c *CoreLoader) Register(loader *Loader) {
+	c.Loaders = append(c.Loaders, loader)
 }
