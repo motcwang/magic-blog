@@ -1,6 +1,8 @@
 # server
 server:
-  port: 6954
+  address: ':6954'
+  readTimeout: 10
+  writeTimeout: 10
 
 # logger configuration
 log:

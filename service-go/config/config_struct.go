@@ -1,5 +1,7 @@
 package config
 
+import "time"
+
 // Config struct
 type Config struct {
 	Server Server `yaml:"server"`
@@ -8,7 +10,9 @@ type Config struct {
 
 // Server struct
 type Server struct {
-	Port int `yaml:"port"`
+	Address      string        `yaml:"address"`
+	ReadTimeout  time.Duration `yaml:"readTimeout"`
+	WriteTimeout time.Duration `yaml:"writeTimeout"`
 }
 
 // Log struct

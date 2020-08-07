@@ -1,6 +1,8 @@
 package main
 
-import "magician/core/app"
+import (
+	"magician/core/app"
+)
 
 func main() {
 	app.Run()

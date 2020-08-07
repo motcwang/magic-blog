@@ -16,7 +16,7 @@ import (
 )
 
 // Logger 日志对象
-var Logger *oplogging.Logger
+var logger *oplogging.Logger
 
 const (
 	defaultFormatter = ` %{time:2006/01/02 - 15:04:05.000} %{shortfile} %{color:bold}▶ [%{level:.6s}] %{message}%{color:reset}`
@@ -28,9 +28,8 @@ func init() {
 	if logConfig.Prefix == "" {
 		logConfig.Prefix = "[-]"
 	}
-	fmt.Println(logConfig)
 
-	Logger = oplogging.MustGetLogger(module)
+	logger = oplogging.MustGetLogger(module)
 	var backends []oplogging.Backend
 	registerStdout(logConfig, &backends)
 	if fileWriter := registerFile(logConfig, &backends); fileWriter != nil {
