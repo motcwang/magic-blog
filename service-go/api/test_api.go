@@ -1,10 +1,15 @@
 package api
 
-import "github.com/gin-gonic/gin"
+import (
+	"magician/common/response"
+
+	"github.com/gin-gonic/gin"
+)
 
 // Test for test
 func Test(ctx *gin.Context) {
-	ctx.JSON(200, gin.H{
+	// _ = c.ShouldBindJSON(&dict)
+	response.Ok(ctx, gin.H{
 		"message": "hello world",
 	})
 }
