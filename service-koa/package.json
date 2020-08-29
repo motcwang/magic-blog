@@ -4,8 +4,8 @@
   "description": "Service",
   "main": "dist/app.js",
   "scripts": {
-    "typescript:build": "node npm-scripts.js typescript:build",
-    "typescript:watch": "node npm-scripts.js typescript:watch",
+    "ts:build": "node npm-scripts.js typescript:build",
+    "ts:watch": "node npm-scripts.js typescript:watch",
     "dev": "./node_modules/.bin/nodemon dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
