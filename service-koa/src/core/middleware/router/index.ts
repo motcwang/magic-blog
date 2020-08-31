@@ -2,7 +2,6 @@
 import Router from 'koa-router';
 import { singleton, autoInjectable } from 'tsyringe';
 import { RouterService } from '../../service/router';
-// import '../../../controller/test';
 
 @singleton()
 @autoInjectable()

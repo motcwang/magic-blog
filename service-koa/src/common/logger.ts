@@ -40,55 +40,56 @@ export class Logger {
     this.tag = tag;
   }
 
-  public log(message: string, ...args: any[]): void {
+  public log(message: any, ...args: any[]): void {
     this._log('log', message, ...args);
   }
 
-  public trace(message: string, ...args: any[]): void {
+  public trace(message: any, ...args: any[]): void {
     this._log('trace', message, ...args);
   }
 
-  public debug(message: string, ...args: any[]): void {
+  public debug(message: any, ...args: any[]): void {
     this._log('debug', message, ...args);
   }
 
-  public info(message: string, ...args: any[]): void {
+  public info(message: any, ...args: any[]): void {
     this._log('info', message, ...args);
   }
 
-  public green(message: string, ...args: any[]): void {
+  public green(message: any, ...args: any[]): void {
     this._log('green', message, ...args);
   }
 
-  public pink(message: string, ...args: any[]): void {
+  public pink(message: any, ...args: any[]): void {
     this._log('pink', message, ...args);
   }
 
-  public warn(message: string, ...args: any[]): void {
+  public warn(message: any, ...args: any[]): void {
     this._log('warn', message, ...args);
   }
 
-  public error(message: string, ...args: any[]): void {
+  public error(message: any, ...args: any[]): void {
     this._log('error', message, ...args);
   }
 
-  public fatal(message: string, ...args: any[]): void {
+  public fatal(message: any, ...args: any[]): void {
     this._log('fatal', message, ...args);
   }
 
-  private _log(method: string, message: string, ...args: any[]): void {
+  private _log(method: string, message: any, ...args: any[]): void {
     if (!message) {
       return;
     }
-    let msg;
+    let msg = message;
     let params = args;
     if (!args || args.length === 0) {
       params = [''];
     }
-    if (typeof message === 'object') {
-      msg = JSON.stringify(message);
+    if (typeof msg === 'object') {
+      params = [msg].concat(params);
+      msg = '%o';
     }
-    msg = `[${this.tag}] - ${message}`;
+    msg = `[${this.tag}] - ${msg}`;
     switch (method) {
       case 'log':
         logger.log(msg, ...params);

@@ -1,15 +1,17 @@
 /* eslint-disable no-unused-vars */
 import { getMapping, controller } from '../core/decorator';
 import { Context } from '../core/types';
-import { injectable } from 'tsyringe';
+import { singleton } from 'tsyringe';
+import { Logger } from '../common/logger';
 
-// 自动引入  不用手动引入
+const logger = Logger.create('TestController');
 
 @controller()
-@injectable()
+@singleton()
 export class TestController {
-  @getMapping('/')
+  @getMapping('/test')
   public async test(ctx: Context) {
+    logger.pink('test');
     ctx.body = 'hello';
   }
 }

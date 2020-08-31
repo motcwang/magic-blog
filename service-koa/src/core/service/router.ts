@@ -4,6 +4,12 @@ import { RouterPathConfig, RouterMiddleware, RouterPath, Router, Context, Next }
 import { Metadata } from '../../common/metadata';
 import { controllerPathKeyResolve } from '../constants';
 import * as path from 'path';
+import { Logger } from '../../common/logger';
+import config from '../../config';
+import * as container from '../container';
+import { getClassName, getClass } from '../utils';
+
+const logger = Logger.create('RouterService');
 
 @singleton()
 export class RouterService {
@@ -23,9 +29,18 @@ export class RouterService {
     for (const [config, middleware] of this.routerConfigMap) {
       const routerParams = config.params;
 
+      const path = this.handlePath(config.target, routerParams.path);
+      logger.pink('api - method: %s, url: %s', routerParams.method, path);
+
+      // Register the controller
+      container.AntiDuplicateRegister(getClassName(config.target), {
+        useClass: getClass(config.target)
+      });
+      const target = container.load(getClassName(config.target));
+
       router[routerParams.method.toLocaleLowerCase()](
-        this.handlePath(config.target, routerParams.path),
-        this.hanldeMiddleware(config.target, middleware)
+        path,
+        this.hanldeMiddleware(target, middleware)
       );
     }
 
@@ -35,7 +50,7 @@ export class RouterService {
   private handlePath(target: any, routerPath: RouterPath) {
     const controllerPath = Metadata.getOwn(controllerPathKeyResolve(target), target);
     return path
-      .join(controllerPath, routerPath as string)
+      .join(config.httpServer.prefix, controllerPath, routerPath as string)
       .split(path.sep)
       .join('/');
   }
