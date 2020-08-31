@@ -10,7 +10,6 @@
     "experimentalDecorators": true,
     "declaration": true,
     "declarationMap": true,
-    "outDir": "dist",
     "strict": true,
     "strictNullChecks": false,
     "noUnusedLocals": true,
@@ -20,11 +19,12 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": false,
     "suppressImplicitAnyIndexErrors": true,
+    "outDir": "dist",
     "baseUrl": "./src",
     "paths": {
-      "@": ["."],
-      "@core": ["./core"]
+      "*": ["*"]
     },
+    "plugins": [{ "transform": "@zerollup/ts-transform-paths" }]
   },
-  "include": ["src/*"]
+  "include": ["./typings", "./src/**/*.ts"]
 }
