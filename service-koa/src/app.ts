@@ -1,6 +1,5 @@
 /* eslint-disable no-duplicate-imports */
 /* eslint-disable no-unused-vars */
-import 'reflect-metadata';
 import { BaseApplication } from './core/wrapper';
 import { Logger } from './common/logger';
 
