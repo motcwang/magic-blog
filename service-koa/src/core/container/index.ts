@@ -18,7 +18,7 @@ export const isRegistered = <T>(token: InjectionToken<T>, recursive?: boolean) =
  * @param target
  * @param provider
  */
-export const AntiDuplicateRegister = <T>(target: InjectionToken<T>, provider: ClassProvider<T>) => {
+export const antiDuplicateRegister = <T>(target: InjectionToken<T>, provider: ClassProvider<T>) => {
   if (container.isRegistered(target)) {
     return;
   }
