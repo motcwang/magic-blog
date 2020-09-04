@@ -4,3 +4,4 @@ export * from './router';
 export * from './controller';
 export * from './service';
 export * from './component';
+export * from './log';

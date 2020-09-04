@@ -1,20 +1,23 @@
 /* eslint-disable no-unused-vars */
-import { getMapping, controller } from '../core/decorator';
+import { getMapping, controller, log } from '../core/decorator';
 import { Context } from '../core/types';
-import { Logger } from '../common/logger';
 import { TestService } from '../service';
-const logger = Logger.create('TestController');
+import { BaseController } from '../core/wrapper';
+import { Logger } from '../common/logger';
 
+@log()
 @controller()
-export class TestController {
+export class TestController extends BaseController {
+  private logger: Logger
   private testService: TestService
   public constructor(testService: TestService) {
+    super();
     this.testService = testService;
   }
 
   @getMapping('/test')
   public async test(ctx: Context) {
-    logger.pink('test');
+    this.logger.pink('test');
     this.testService.log();
     ctx.body = 'hello';
   }

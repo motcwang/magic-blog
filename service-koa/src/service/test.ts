@@ -1,11 +1,12 @@
-import { singleton } from 'tsyringe';
+/* eslint-disable no-unused-vars */
 import { Logger } from '../common/logger';
+import { log, service } from '../core/decorator';
 
-const logger = Logger.create('TestService');
-
-@singleton()
+@log()
+@service()
 export class TestService {
+  private logger: Logger
   public log() {
-    logger.pink('test service');
+    this.logger.pink('test service');
   }
 }

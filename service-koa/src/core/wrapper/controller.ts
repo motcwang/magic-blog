@@ -3,6 +3,9 @@ import { Response, ResponseCodeType } from '../types';
 import { Wrapper} from './index';
 
 export class BaseController {
+  public static haha() {
+    console.log('static haha');
+  }
   protected isSuccess(data: Response): boolean {
     return Wrapper.isSuccess(data);
   }
