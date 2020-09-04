@@ -1,14 +1,12 @@
 /* eslint-disable no-unused-vars */
-import * as container from '../container';
-import { injectable } from './tsyringe';
+import { injectable, singleton } from './tsyringe';
 
-export function component(singleton = true): ClassDecorator {
+export function component(isSingleton = true): ClassDecorator {
   return (target: any): any => {
-    if (singleton) {
-      container.registerSingleton(target);
+    if (isSingleton) {
+      singleton()(target);
     } else {
-      container.register(target, target);
+      injectable()(target);
     }
-    return injectable()(target);
   };
 }

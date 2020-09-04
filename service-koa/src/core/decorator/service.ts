@@ -3,6 +3,6 @@ import { component } from './component';
 
 export function service(singleton = true): ClassDecorator {
   return (target: any): any => {
-    return component(singleton)(target);
+    component(singleton)(target);
   };
 };
