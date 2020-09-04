@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { singleton } from 'tsyringe';
+import { service } from '../decorator/service';
 import { RouterPathConfig, RouterMiddleware, RouterPath, Router, Context, Next } from '../types';
 import { Metadata } from '../../common/metadata';
 import { controllerPathKeyResolve } from '../constants';
@@ -11,7 +11,7 @@ import { getClass } from '../utils';
 
 const logger = Logger.create('RouterService');
 
-@singleton()
+@service()
 export class RouterService {
   private static routerConfigMap: Map<RouterPathConfig, RouterMiddleware> = new Map();
 

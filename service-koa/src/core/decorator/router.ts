@@ -6,7 +6,7 @@ import { RouterService } from '../service/router';
  * Method decorator
  * @param params
  */
-export const routerMapping = (params: RouterParams): Function => {
+export function routerMapping(params: RouterParams): Function {
   return (target: any, name: string, _descriptor: ParameterDecorator) => {
     const config = {
       target,
@@ -17,18 +17,18 @@ export const routerMapping = (params: RouterParams): Function => {
   };
 };
 
-export const getMapping = (path: RouterPath): Function => {
+export function getMapping(path: RouterPath): Function {
   return routerMapping({ method: 'get', path });
 };
 
-export const postMapping = (path: RouterPath): Function => {
+export function postMapping(path: RouterPath): Function {
   return routerMapping({ method: 'post', path });
 };
 
-export const putMapping = (path: RouterPath): Function => {
+export function putMapping(path: RouterPath): Function {
   return routerMapping({ method: 'put', path });
 };
 
-export const deleteMapping = (path: RouterPath): Function => {
+export function deleteMapping(path: RouterPath): Function {
   return routerMapping({ method: 'delete', path });
 };
