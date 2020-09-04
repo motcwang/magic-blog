@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import { RouterParams, RouterPath } from '../types';
 import { RouterService } from '../service/router';
-import * as container from '../container';
 
 /**
  * Method decorator
@@ -14,8 +13,7 @@ export const routerMapping = (params: RouterParams): Function => {
       methodName: name,
       params
     };
-    const routerService = container.load(RouterService);
-    routerService.saveDecoratorRouterInfo(config, target[name]);
+    RouterService.saveDecoratorRouterInfo(config, target[name]);
   };
 };
 

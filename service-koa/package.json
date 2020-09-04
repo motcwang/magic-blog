@@ -7,6 +7,7 @@
     "ts:build": "node npm-scripts.js typescript:build",
     "ts:watch": "node npm-scripts.js typescript:watch",
     "dev": "./node_modules/.bin/nodemon dist/app.js",
+    "ts:dev": "node npm-scripts.js typescript:build && ./node_modules/.bin/nodemon dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

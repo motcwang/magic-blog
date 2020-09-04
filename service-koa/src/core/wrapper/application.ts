@@ -13,9 +13,8 @@ import { Logger } from '../../common/logger';
 import config from '../../config';
 import * as container from '../container';
 
-import '../../middleware';
-import '../../service';
 import '../../controller';
+import '../../middleware';
 
 const logger = Logger.create('BaseApplication');
 

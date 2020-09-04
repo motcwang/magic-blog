@@ -7,44 +7,40 @@ import * as path from 'path';
 import { Logger } from '../../common/logger';
 import config from '../../config';
 import * as container from '../container';
-import { getClassName, getClass } from '../utils';
+import { getClass } from '../utils';
 
 const logger = Logger.create('RouterService');
 
 @singleton()
 export class RouterService {
-  private routerConfigMap: Map<RouterPathConfig, RouterMiddleware> = new Map();
+  private static routerConfigMap: Map<RouterPathConfig, RouterMiddleware> = new Map();
 
   /**
    * saveDecoratorRouterInfo
    */
-  public saveDecoratorRouterInfo(config: RouterPathConfig, middleware: RouterMiddleware) {
-    this.routerConfigMap.set(config, middleware);
+  public static saveDecoratorRouterInfo(config: RouterPathConfig, middleware: RouterMiddleware) {
+    RouterService.routerConfigMap.set(config, middleware);
   }
 
   /**
    * loadRoutes
    */
   public loadRoutes(router: Router) {
-    for (const [config, middleware] of this.routerConfigMap) {
+    logger.pink('>>> Http Api start.');
+    for (const [config, middleware] of RouterService.routerConfigMap) {
       const routerParams = config.params;
 
       const path = this.handlePath(config.target, routerParams.path);
       logger.pink('api - method: %s, url: %s', routerParams.method, path);
 
-      // Register the controller
-      container.AntiDuplicateRegister(getClassName(config.target), {
-        useClass: getClass(config.target)
-      });
-      const target = container.load(getClassName(config.target));
-
+      const target = container.load(getClass(config.target));
       router[routerParams.method.toLocaleLowerCase()](
         path,
         this.hanldeMiddleware(target, middleware)
       );
     }
-
-    this.routerConfigMap.clear();
+    logger.pink('>>> Http Api end.');
+    RouterService.routerConfigMap.clear();
   }
 
   private handlePath(target: any, routerPath: RouterPath) {

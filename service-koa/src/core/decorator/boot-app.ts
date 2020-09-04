@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import constructor from '../types/constructor';
+import { constructor } from '../types';
 // import { container } from 'tsyringe';
 
 /**
