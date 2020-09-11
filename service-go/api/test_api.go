@@ -1,7 +1,7 @@
 package api
 
 import (
-	"magician/common/response"
+	"magician/core/wrapper/response"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,7 +9,7 @@ import (
 // Test for test
 func Test(ctx *gin.Context) {
 	// _ = c.ShouldBindJSON(&dict)
-	response.Ok(ctx, gin.H{
+	response.Ok(ctx, response.D{
 		"message": "hello world",
 	})
 }
