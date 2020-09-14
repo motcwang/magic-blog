@@ -2,11 +2,8 @@ package router
 
 import "github.com/gin-gonic/gin"
 
-// Get Router
-func Get() *gin.Engine {
-	r := gin.Default()
-	routerGroup := r.Group("")
+// Register Router
+func Register(app *gin.Engine) {
+	routerGroup := app.Group("")
 	InitTestRouter(routerGroup)
-
-	return r
 }

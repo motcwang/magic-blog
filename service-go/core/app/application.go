@@ -5,12 +5,15 @@ import (
 	"magician/common/log"
 	"magician/config"
 	"magician/core"
+	"magician/core/middleware"
 	"magician/core/server"
 	"magician/router"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Run start app
@@ -22,9 +25,13 @@ func Run() {
 }
 
 func runHTTPServer(conf config.Server) {
-	r := router.Get()
+	app := gin.New()
 
-	httpServer := server.HTTPServer(r, conf)
+	app.Use(middleware.RecoveryMiddleware())
+
+	router.Register(app)
+
+	httpServer := server.HTTPServer(app, conf)
 
 	go func() {
 		log.Infof("Service started successfully, address=%s", httpServer.Addr)
