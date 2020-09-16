@@ -4,38 +4,40 @@ import (
 	"context"
 	"magician/common/log"
 	"magician/config"
-	"magician/core"
-	"magician/core/middleware"
+	"magician/core/injector"
 	"magician/core/server"
-	"magician/router"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 // Run start app
 func Run() {
 	log.Info("Start run application.")
-
-	core.GetCoreLoader().Init()
-	runHTTPServer(config.CONFIG.Server)
+	// todo invoke cleanup func
+	initModule()
 }
 
-func runHTTPServer(conf config.Server) {
-	app := gin.New()
+func initModule() (func(), error) {
 
-	app.Use(middleware.RecoveryMiddleware())
+	container, containerCleanupFunc, err := injector.BuildContainer()
+	if err != nil {
+		return nil, err
+	}
 
-	router.Register(app)
+	runHTTPServer(config.CONFIG.Server, container.Engine)
 
-	httpServer := server.HTTPServer(app, conf)
+	return func() {
+		containerCleanupFunc()
+	}, nil
+}
+
+func runHTTPServer(conf config.Server, handler http.Handler) {
+	httpServer := server.HTTPServer(handler, conf)
 
 	go func() {
 		log.Infof("Service started successfully, address=%s", httpServer.Addr)
-		// 服务连接
 		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %s\n", err)
 		}
@@ -45,7 +47,6 @@ func runHTTPServer(conf config.Server) {
 }
 
 func waittingForExit(srv *http.Server) {
-	// 等待中断信号以优雅地关闭服务器（设置 5 秒的超时时间）
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	<-quit

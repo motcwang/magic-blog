@@ -3,7 +3,6 @@ package log
 import (
 	"fmt"
 	"io"
-	"magician/common/constants"
 	"magician/common/utils"
 	"magician/config"
 	"os"
@@ -20,10 +19,12 @@ var logger *oplogging.Logger
 
 const (
 	defaultFormatter = ` %{time:2006/01/02 - 15:04:05.000} %{shortfile} %{color:bold}▶ [%{level:.6s}] %{message}%{color:reset}`
-	module           = constants.ServerName
 )
 
+var module string
+
 func init() {
+	module = config.CONFIG.App.Name
 	logConfig := config.CONFIG.Log
 	if logConfig.Prefix == "" {
 		logConfig.Prefix = "[-]"

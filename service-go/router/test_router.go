@@ -7,7 +7,7 @@ import (
 )
 
 // InitTestRouter for test
-func InitTestRouter(routerGroup *gin.RouterGroup) {
+func InitTestRouter(routerGroup *gin.RouterGroup, test *api.Test) {
 	router := routerGroup.Group("test")
-	router.GET("hello", api.Test)
+	router.GET("hello", test.TestFunc)
 }

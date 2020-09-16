@@ -1,9 +1,19 @@
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	"magician/api"
 
-// Register Router
-func Register(app *gin.Engine) {
+	"github.com/gin-gonic/gin"
+)
+
+// Router for define api
+type Router struct {
+	Test *api.Test
+}
+
+// Register routes
+func (r *Router) Register(app *gin.Engine) error {
 	routerGroup := app.Group("")
-	InitTestRouter(routerGroup)
+	InitTestRouter(routerGroup, r.Test)
+	return nil
 }
