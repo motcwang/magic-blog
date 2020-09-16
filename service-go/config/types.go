@@ -12,6 +12,7 @@ type Config struct {
 	Redis  Redis  `yaml:"redis"`
 }
 
+// App struct
 type App struct {
 	Name string `yaml:"name"`
 }
