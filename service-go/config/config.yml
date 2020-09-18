@@ -48,9 +48,9 @@ mysql:
   # 用户名
   user: "root"
   # 密码
-  password: "Wc.1331588182"
+  password: "password"
   # 数据库
-  dbName: "mt_gm_db"
+  dbName: "db"
   # 连接参数
   parameters: "charset=utf8mb4&parseTime=True&loc=Local&allowNativePasswords=true"
   # string 类型字段的默认长度
@@ -69,7 +69,7 @@ redis:
   address: "127.0.0.1:6379"
   db: 4
   password: "ingotredis"
-  keyPrefix: "GM:"
+  keyPrefix: "Ingot:"
 
 Auth:
   permitUrls:
