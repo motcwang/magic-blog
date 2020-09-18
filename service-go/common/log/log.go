@@ -1,111 +1,171 @@
 package log
 
 import (
+	"context"
 	"fmt"
 	"io"
-	"magician/common/utils"
-	"magician/config"
-	"os"
-	"strings"
-	"time"
 
-	"github.com/gin-gonic/gin"
-	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
-	oplogging "github.com/op/go-logging"
+	"github.com/sirupsen/logrus"
 )
 
-// Logger 日志对象
-var logger *oplogging.Logger
+// Define logrus alias
+var (
+	Tracef = logrus.Tracef
+	Debugf = logrus.Debugf
+	Debug  = logrus.Debug
+	Info   = logrus.Info
+	Infof  = logrus.Infof
+	Warnf  = logrus.Warnf
+	Warn   = logrus.Warn
+	Errorf = logrus.Errorf
+	Error  = logrus.Error
+	Fatalf = logrus.Fatalf
+	Fatal  = logrus.Fatal
+	Panicf = logrus.Panicf
+	Panic  = logrus.Panic
+	Printf = logrus.Printf
+	Print  = logrus.Print
+)
 
+// Define key
 const (
-	defaultFormatter = ` %{time:2006/01/02 - 15:04:05.000} %{shortfile} %{color:bold}▶ [%{level:.6s}] %{message}%{color:reset}`
+	TraceIDKey = "trace_id"
+	UserIDKey  = "user_id"
+	TagKey     = "tag"
+	StackKey   = "stack"
 )
 
-var module string
+type (
+	traceIDKey struct{}
+	userIDKey  struct{}
+	tagKey     struct{}
+	stackKey   struct{}
+)
 
-func init() {
-	module = config.CONFIG.App.Name
-	logConfig := config.CONFIG.Log
-	if logConfig.Prefix == "" {
-		logConfig.Prefix = "[-]"
-	}
+// Logger Logrus
+type Logger = logrus.Logger
 
-	logger = oplogging.MustGetLogger(module)
-	var backends []oplogging.Backend
-	registerStdout(logConfig, &backends)
-	if fileWriter := registerFile(logConfig, &backends); fileWriter != nil {
-		gin.DefaultWriter = io.MultiWriter(fileWriter, os.Stdout)
-	}
-	oplogging.SetBackend(backends...)
+// Entry Logrus entry
+type Entry = logrus.Entry
 
+// Hook 定义日志钩子别名
+type Hook = logrus.Hook
+
+// Fields Logrus
+type Fields = logrus.Fields
+
+// SetLevel 设定日志级别
+func SetLevel(level int) {
+	logrus.SetLevel(logrus.Level(level))
 }
 
-func registerStdout(c config.Log, backends *[]oplogging.Backend) {
-	if c.Stdout != "" {
-		level, err := oplogging.LogLevel(c.Stdout)
-		if err != nil {
-			fmt.Println(err)
-		}
-		*backends = append(*backends, createBackend(os.Stdout, c, level))
+// SetFormatter 设定日志输出格式
+func SetFormatter(format string) {
+	switch format {
+	case "json":
+		logrus.SetFormatter(new(logrus.JSONFormatter))
+	default:
+		logrus.SetFormatter(new(logrus.TextFormatter))
 	}
 }
 
-func registerFile(c config.Log, backends *[]oplogging.Backend) io.Writer {
-	if c.File != "" {
-		if ok, _ := utils.PathExists(c.LogDir); !ok {
-			// directory not exist
-			fmt.Println("create log directory")
-			err := os.Mkdir(c.LogDir, os.ModePerm)
-			if err != nil {
-				fmt.Println("mkdir error - ", err)
-			}
-		}
-		fileWriter, err := rotatelogs.New(
-			c.LogDir+string(os.PathSeparator)+"%Y-%m-%d-%H-%M.log",
-			// generate soft link, point to latest log file
-			rotatelogs.WithLinkName(c.LogSoftLink),
-			// maximum time to save log files
-			rotatelogs.WithMaxAge(7*24*time.Hour),
-			// time period of log file switching
-			rotatelogs.WithRotationTime(24*time.Hour),
-		)
-		if err != nil {
-			fmt.Println(err)
-		}
-		level, err := oplogging.LogLevel(c.File)
-		if err != nil {
-			fmt.Println(err)
-		}
-		*backends = append(*backends, createBackend(fileWriter, c, level))
+// SetOutput 设定日志输出
+func SetOutput(out io.Writer) {
+	logrus.SetOutput(out)
+}
 
-		return fileWriter
+// AddHook 增加日志钩子
+func AddHook(hook Hook) {
+	logrus.AddHook(hook)
+}
+
+// NewTraceIDContext 创建跟踪ID上下文
+func NewTraceIDContext(ctx context.Context, traceID string) context.Context {
+	return context.WithValue(ctx, traceIDKey{}, traceID)
+}
+
+// FromTraceIDContext 从上下文中获取跟踪ID
+func FromTraceIDContext(ctx context.Context) string {
+	v := ctx.Value(traceIDKey{})
+	if v != nil {
+		if s, ok := v.(string); ok {
+			return s
+		}
+	}
+	return ""
+}
+
+// NewUserIDContext 创建用户ID上下文
+func NewUserIDContext(ctx context.Context, userID string) context.Context {
+	return context.WithValue(ctx, userIDKey{}, userID)
+}
+
+// FromUserIDContext 从上下文中获取用户ID
+func FromUserIDContext(ctx context.Context) string {
+	v := ctx.Value(userIDKey{})
+	if v != nil {
+		if s, ok := v.(string); ok {
+			return s
+		}
+	}
+	return ""
+}
+
+// NewTagContext 创建Tag上下文
+func NewTagContext(ctx context.Context, tag string) context.Context {
+	return context.WithValue(ctx, tagKey{}, tag)
+}
+
+// FromTagContext 从上下文中获取Tag
+func FromTagContext(ctx context.Context) string {
+	v := ctx.Value(tagKey{})
+	if v != nil {
+		if s, ok := v.(string); ok {
+			return s
+		}
+	}
+	return ""
+}
+
+// NewStackContext 创建Stack上下文
+func NewStackContext(ctx context.Context, stack error) context.Context {
+	return context.WithValue(ctx, stackKey{}, stack)
+}
+
+// FromStackContext 从上下文中获取Stack
+func FromStackContext(ctx context.Context) error {
+	v := ctx.Value(stackKey{})
+	if v != nil {
+		if s, ok := v.(error); ok {
+			return s
+		}
 	}
 	return nil
 }
 
-func createBackend(w io.Writer, c config.Log, level oplogging.Level) oplogging.Backend {
-	backend := oplogging.NewLogBackend(w, c.Prefix, 0)
-	stdoutWriter := false
-	if w == os.Stdout {
-		stdoutWriter = true
+// WithContext 使用上下文创建Entry
+func WithContext(ctx context.Context) *Entry {
+	if ctx == nil {
+		ctx = context.Background()
 	}
-	format := getLogFormatter(c, stdoutWriter)
-	backendLeveled := oplogging.AddModuleLevel(oplogging.NewBackendFormatter(backend, format))
-	backendLeveled.SetLevel(level, module)
-	return backendLeveled
-}
 
-func getLogFormatter(c config.Log, stdoutWriter bool) oplogging.Formatter {
-	pattern := defaultFormatter
-	if !stdoutWriter {
-		// Color is only required for console output
-		// Other writers don't need %{color} tag
-		pattern = strings.Replace(pattern, "%{color:bold}", "", -1)
-		pattern = strings.Replace(pattern, "%{color:reset}", "", -1)
+	fields := map[string]interface{}{}
+
+	if v := FromTraceIDContext(ctx); v != "" {
+		fields[TraceIDKey] = v
 	}
-	if !c.LogFile {
-		// Remove %{logfile} tag
-		pattern = strings.Replace(pattern, "%{longfile}", "", -1)
+
+	if v := FromUserIDContext(ctx); v != "" {
+		fields[UserIDKey] = v
 	}
-	return oplogging.MustStringFormatter(pattern)
+
+	if v := FromTagContext(ctx); v != "" {
+		fields[TagKey] = v
+	}
+
+	if v := FromStackContext(ctx); v != nil {
+		fields[StackKey] = fmt.Sprintf("%+v", v)
+	}
+
+	return logrus.WithContext(ctx).WithFields(fields)
 }

@@ -1,8 +1,8 @@
 package api
 
 import (
-	"magician/core/wrapper/response"
-	"magician/service"
+	"ingot/service"
+	"ingot/support/response"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,7 +1,7 @@
 package server
 
 import (
-	"magician/config"
+	"ingot/config"
 	"net/http"
 	"time"
 )

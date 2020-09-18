@@ -1,7 +1,7 @@
 package main
 
 import (
-	"magician/core/app"
+	"ingot/core/app"
 )
 
 func main() {

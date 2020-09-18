@@ -4,8 +4,8 @@
 package injector
 
 import (
-	"magician/core/container"
-	"magician/core/provider"
+	"ingot/core/container"
+	"ingot/core/provider"
 
 	"github.com/google/wire"
 )
@@ -18,6 +18,7 @@ func BuildContainer() (*container.Container, func(), error) {
 		provider.DaoSet,
 		provider.BuildHTTPHandler,
 		provider.BuildGorm,
+		provider.BuildAuthentication,
 		container.ContainerSet,
 	)
 	return new(container.Container), nil, nil

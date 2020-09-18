@@ -1,21 +1,28 @@
 # app
 app:
-  name: "Magician"
+  name: "ingot"
 
 # server
 server:
+  # debug, test, release
+  mode: "debug"
   address: ':6954'
   readTimeout: 10
   writeTimeout: 10
+  prefix: "/api"
 
 # logger configuration
 log:
-  prefix: '[magician]'
-  logFile: true
-  stdout: 'DEBUG'
-  file: 'DEBUG'
-  logSoftLink: './.log/latest_log'
-  logDir: './.log'
+  # 日志级别 1:fatal 2:error,3:warn,4:info,5:debug,6:trace
+  level: 5
+  # 日志格式（text/json）
+  format: "text" 
+  # 日志输出(stdout/stderr/file)
+  output: 'stdout'
+  # 指定日志输出的文件路径
+  outputFileDir: './.log'
+  # 最新日志软连接
+  logSoftLink: './.log/today'
 
 # gorm config
 gorm:
@@ -30,7 +37,7 @@ gorm:
   # 设置空闲连接池中的最大连接数
   maxIdleConns: 50
   # 是否启用自动映射数据库表结构
-  enableAutoMigrate: true
+  enableAutoMigrate: false 
 
 # mysql config
 mysql:
@@ -41,9 +48,9 @@ mysql:
   # 用户名
   user: "root"
   # 密码
-  password: "password"
+  password: "Wc.1331588182"
   # 数据库
-  dbName: "db_name"
+  dbName: "mt_gm_db"
   # 连接参数
   parameters: "charset=utf8mb4&parseTime=True&loc=Local&allowNativePasswords=true"
   # string 类型字段的默认长度
@@ -61,5 +68,16 @@ mysql:
 redis:
   address: "127.0.0.1:6379"
   db: 4
-  password: "password"
-  keyPrefix: "pre:"
+  password: "ingotredis"
+  keyPrefix: "GM:"
+
+Auth:
+  permitUrls:
+    - "/api/test"
+  jwt:
+    # 签名方式(支持：HS512/HS384)
+    signingMethod: '支持：HS512'
+    # 签名key
+    signingKey: 'ingot-auth'
+    # 过期时间（单位秒）
+    expired: 7200

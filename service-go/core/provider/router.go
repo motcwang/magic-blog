@@ -1,8 +1,8 @@
 package provider
 
 import (
-	"magician/core"
-	"magician/router"
+	"ingot/core"
+	"ingot/router"
 
 	"github.com/google/wire"
 )

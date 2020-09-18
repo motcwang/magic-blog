@@ -6,19 +6,24 @@
 package injector
 
 import (
-	"magician/api"
-	"magician/core/container"
-	"magician/core/provider"
-	"magician/model/dao"
-	"magician/router"
-	"magician/service"
+	"ingot/api"
+	"ingot/core/container"
+	"ingot/core/provider"
+	"ingot/model/dao"
+	"ingot/router"
+	"ingot/service"
 )
 
 // Injectors from wire.go:
 
 func BuildContainer() (*container.Container, func(), error) {
-	db, cleanup, err := provider.BuildGorm()
+	authentication, cleanup, err := provider.BuildAuthentication()
 	if err != nil {
+		return nil, nil, err
+	}
+	db, cleanup2, err := provider.BuildGorm()
+	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	user := &dao.User{
@@ -31,6 +36,7 @@ func BuildContainer() (*container.Container, func(), error) {
 		Test: test,
 	}
 	routerRouter := &router.Router{
+		Auth: authentication,
 		Test: apiTest,
 	}
 	engine := provider.BuildHTTPHandler(routerRouter)
@@ -38,6 +44,7 @@ func BuildContainer() (*container.Container, func(), error) {
 		Engine: engine,
 	}
 	return containerContainer, func() {
+		cleanup2()
 		cleanup()
 	}, nil
 }

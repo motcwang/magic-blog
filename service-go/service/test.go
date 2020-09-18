@@ -1,8 +1,8 @@
 package service
 
 import (
-	"magician/common/log"
-	"magician/model/dao"
+	"ingot/common/log"
+	"ingot/model/dao"
 )
 
 // Test for test

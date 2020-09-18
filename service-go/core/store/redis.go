@@ -1,10 +1,16 @@
 package store
 
 import (
-	"magician/config"
-
 	"github.com/go-redis/redis"
 )
+
+// RedisParams for create
+type RedisParams struct {
+	Address   string
+	DB        int
+	Password  string
+	KeyPrefix string
+}
 
 // RedisClient struct
 type RedisClient struct {
@@ -13,15 +19,15 @@ type RedisClient struct {
 }
 
 // NewRedisClient for create
-func NewRedisClient(cfg config.Redis) *RedisClient {
+func NewRedisClient(params *RedisParams) *RedisClient {
 	cli := redis.NewClient(&redis.Options{
-		Addr:     cfg.Address,
-		DB:       cfg.DB,
-		Password: cfg.Password,
+		Addr:     params.Address,
+		DB:       params.DB,
+		Password: params.Password,
 	})
 
 	return &RedisClient{
 		Cli:       cli,
-		KeyPrefix: cfg.KeyPrefix,
+		KeyPrefix: params.KeyPrefix,
 	}
 }

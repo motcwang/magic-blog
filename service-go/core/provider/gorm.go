@@ -3,9 +3,9 @@ package provider
 import (
 	"errors"
 	"fmt"
-	"magician/common/log"
-	"magician/config"
-	"magician/model/domain"
+	"ingot/common/log"
+	"ingot/config"
+	"ingot/model/domain"
 	"strings"
 	"time"
 

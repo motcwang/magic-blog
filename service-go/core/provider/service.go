@@ -1,7 +1,7 @@
 package provider
 
 import (
-	"magician/service"
+	"ingot/service"
 
 	"github.com/google/wire"
 )

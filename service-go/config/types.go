@@ -10,6 +10,7 @@ type Config struct {
 	Gorm   Gorm   `yaml:"gorm"`
 	MySQL  MySQL  `yaml:"mysql"`
 	Redis  Redis  `yaml:"redis"`
+	Auth   Auth   `yaml:"auth"`
 }
 
 // App struct
@@ -19,19 +20,20 @@ type App struct {
 
 // Server struct
 type Server struct {
+	Mode         string        `yaml:"mode"`
 	Address      string        `yaml:"address"`
 	ReadTimeout  time.Duration `yaml:"readTimeout"`
 	WriteTimeout time.Duration `yaml:"writeTimeout"`
+	Prefix       string        `yaml:"prefix"`
 }
 
 // Log struct
 type Log struct {
-	Prefix      string `yaml:"prefix"`
-	LogFile     bool   `yaml:"logFile"`
-	Stdout      string `yaml:"stdout"`
-	File        string `yaml:"file"`
-	LogDir      string `yaml:"logDir"`
-	LogSoftLink string `yaml:"logSoftLink"`
+	Level         int    `yaml:"level"`
+	Format        string `yaml:"format"`
+	Output        string `yaml:"output"`
+	OutputFileDir string `yaml:"outputFileDir"`
+	LogSoftLink   string `yaml:"logSoftLink"`
 }
 
 // Gorm config
@@ -65,4 +67,17 @@ type Redis struct {
 	DB        int    `yaml:"db"`
 	Password  string `yaml:"password"`
 	KeyPrefix string `yaml:"keyPrefix"`
+}
+
+// Auth config
+type Auth struct {
+	PermitUrls []string `yaml:"permitUrls"`
+	Jwt        Jwt      `yaml:"jwt"`
+}
+
+// Jwt config
+type Jwt struct {
+	SigningMethod string `yaml:"signingMethod"`
+	SigningKey    string `yaml:"signingKey"`
+	Expired       int    `yaml:"expired"`
 }

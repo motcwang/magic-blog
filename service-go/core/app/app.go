@@ -2,10 +2,11 @@ package app
 
 import (
 	"context"
-	"magician/common/log"
-	"magician/config"
-	"magician/core/injector"
-	"magician/core/server"
+	"fmt"
+	"ingot/common/log"
+	"ingot/config"
+	"ingot/core/injector"
+	"ingot/core/server"
 	"net/http"
 	"os"
 	"os/signal"
@@ -13,49 +14,74 @@ import (
 )
 
 // Run start app
-func Run() {
-	log.Info("Start run application.")
-	// todo invoke cleanup func
-	initModule()
+func Run() error {
+	banner()
+
+	ctx := log.NewTagContext(context.Background(), "Application")
+
+	cleanupFunc, err := initModule(ctx)
+	if err != nil {
+		return err
+	}
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	log.WithContext(ctx).Info("Server exiting")
+
+	cleanupFunc()
+	return nil
 }
 
-func initModule() (func(), error) {
+func banner() {
+	fmt.Println("                      _                           _")
+	fmt.Println("  ___    ___    ___  (_)  _ __     __ _    ___   | |_        ___    ___    _ __ ___")
+	fmt.Println(" / __|  / _ \\  / __| | | | '_ \\   / _` |  / _ \\  | __|      / __|  / _ \\  | '_ ` _ \\")
+	fmt.Println(" \\__ \\ |  __/ | (__  | | | | | | | (_| | | (_) | | |_   _  | (__  | (_) | | | | | | |")
+	fmt.Println(" |___/  \\___|  \\___| |_| |_| |_|  \\__, |  \\___/   \\__| (_)  \\___|  \\___/  |_| |_| |_|")
+	fmt.Println("                                  |___/")
+	fmt.Println(":: Power by Motcwang ::")
+}
+
+func initModule(ctx context.Context) (func(), error) {
+
+	loggerCleanFunc, err := log.InitLogger()
+	if err != nil {
+		return nil, err
+	}
 
 	container, containerCleanupFunc, err := injector.BuildContainer()
 	if err != nil {
 		return nil, err
 	}
 
-	runHTTPServer(config.CONFIG.Server, container.Engine)
+	httpServerCleanupFunc := runHTTPServer(ctx, config.CONFIG.Server, container.Engine)
 
 	return func() {
+		httpServerCleanupFunc()
 		containerCleanupFunc()
+		loggerCleanFunc()
 	}, nil
 }
 
-func runHTTPServer(conf config.Server, handler http.Handler) {
+func runHTTPServer(ctx context.Context, conf config.Server, handler http.Handler) func() {
 	httpServer := server.HTTPServer(handler, conf)
 
 	go func() {
-		log.Infof("Service started successfully, address=%s", httpServer.Addr)
+		log.WithContext(ctx).Infof("=== HTTP server started successfully, address=%s ===", httpServer.Addr)
 		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
+			log.WithContext(ctx).Fatalf("listen: %s\n", err)
+			panic(err)
 		}
 	}()
 
-	waittingForExit(httpServer)
-}
+	return func() {
+		ctx, cancel := context.WithTimeout(ctx, time.Second*time.Duration(5*time.Second))
+		defer cancel()
 
-func waittingForExit(srv *http.Server) {
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-	log.Info("Shutdown Server ...")
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatal("Server Shutdown:", err)
+		httpServer.SetKeepAlivesEnabled(false)
+		if err := httpServer.Shutdown(ctx); err != nil {
+			log.WithContext(ctx).Errorf(err.Error())
+		}
 	}
-	log.Info("Server exiting")
 }

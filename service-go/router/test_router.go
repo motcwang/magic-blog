@@ -1,7 +1,7 @@
 package router
 
 import (
-	"magician/api"
+	"ingot/api"
 
 	"github.com/gin-gonic/gin"
 )

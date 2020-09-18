@@ -1,7 +1,7 @@
 package provider
 
 import (
-	"magician/model/dao"
+	"ingot/model/dao"
 
 	"github.com/google/wire"
 )
